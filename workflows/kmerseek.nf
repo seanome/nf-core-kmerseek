@@ -7,6 +7,7 @@
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { KMERIZE                } from '../subworkflows/local/kmerize.nf'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
@@ -26,6 +27,13 @@ workflow KMERSEEK {
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+
+
+
+
+    KMERIZE (
+        ch_samplesheet
+    )
 
     //
     // Collate and save software versions
