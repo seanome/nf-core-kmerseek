@@ -7,7 +7,8 @@
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
-include { KMERIZE                } from '../subworkflows/local/kmerize.nf'
+include { KMERIZE as KMERIZE_QUERY  } from '../subworkflows/local/kmerize.nf'
+include { KMERIZE as KMERIZE_TARGET } from '../subworkflows/local/kmerize.nf'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
@@ -25,14 +26,18 @@ workflow KMERSEEK {
 
     main:
 
+    ch_fasta = file(params.fasta) 
+    ch_target = [id: "${ncbi_annotation.baseName}", ch_fasta]
+
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-
-
-
-    KMERIZE (
+    KMERIZE_QUERY (
         ch_samplesheet
+    )
+
+    KMERIZE_TARGET (
+        ch_target
     )
 
     //
