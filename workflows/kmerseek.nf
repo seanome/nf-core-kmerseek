@@ -28,7 +28,7 @@ workflow KMERSEEK {
 
     // Make the params fasta string into a file
     ch_fasta = file(params.fasta) 
-    // Make a meta, fasta channel
+    // Make a meta, fasta channel for the target (reference) database fasta
     ch_target = [[id: "${ch_fasta.baseName}"], [ch_fasta]]
 
     ch_versions = Channel.empty()
