@@ -34,7 +34,7 @@ workflow KMERIZE {
         proteins
     )
 
-    ch_versions < SOURMASH_SKETCH.out.versions
+    ch_versions = ch_versions.mix(SOURMASH_SKETCH.out.versions)
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC
     // TODO: Add sig2kmer here maybe? Or maybe do that all later
