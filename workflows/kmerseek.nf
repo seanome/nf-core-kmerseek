@@ -42,6 +42,8 @@ workflow KMERSEEK {
         ch_target
     )
 
+    ch_versions = ch_versions.mix(SOURMASH_SKETCH.out.versions)
+
     //
     // Collate and save software versions
     //
