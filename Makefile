@@ -8,5 +8,5 @@ clean:
 	rm -rf .nextflow* results work
 
 lint:
-	pre-commit run --all-files 
+	pre-commit run --all-files
 	nf-core lint
