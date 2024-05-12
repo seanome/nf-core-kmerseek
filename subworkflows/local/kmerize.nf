@@ -8,7 +8,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SOURMASH_SKETCH } from '../../modules/nf-core/sourmash/sketch'
+include { SOURMASH_SKETCH_DYNAMIC_KSIZE } from '../../modules/local/sourmash/sketch_dynamic_ksize'
 
 /*
 ========================================================================================
@@ -20,6 +20,8 @@ workflow KMERIZE {
 
     take:
     proteins           // meta, fasta: Path to input fasta file
+    alphabet           // string: Alphabet of the input sequences (dna, protein, dayhoff, hp)
+    ksizes             // string: k=\d+,k=\d+ k-mer sizes to use
 
     main:
 
@@ -27,20 +29,20 @@ workflow KMERIZE {
 
     view(proteins)
 
-    //
-    // Print version and exit if required and dump pipeline parameters to JSON file
-    //
-    SOURMASH_SKETCH (
-        proteins
+
+    SOURMASH_SKETCH_DYNAMIC_KSIZE (
+        proteins,
+        alphabet,
+        ksizes,
     )
 
-    ch_versions = ch_versions.mix(SOURMASH_SKETCH.out.versions)
+    ch_versions = ch_versions.mix(SOURMASH_SKETCH_DYNAMIC_KSIZE.out.versions)
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC
     // TODO: Add sig2kmer here maybe? Or maybe do that all later
     // TODO: Add k-mer counting with Sourmash NodeGraph here
 
     emit:
-    signatures = SOURMASH_SKETCH.out.signatures
+    signatures = SOURMASH_SKETCH_DYNAMIC_KSIZE.out.signatures
     versions    = ch_versions
 }

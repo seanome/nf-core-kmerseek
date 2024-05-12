@@ -51,9 +51,9 @@
             "properties": {
                 "ksizes": {
                     "type": "string",
-                    "default": "k=5,k=6,k=7,k=8,k=9",
+                    "default": "5,6,7,8,9",
                     "description": "K-mer sizes to use for creating signatures, must be of format k=5,k=6,k=7",
-                    "pattern": "^k=\\d+(,k=\\d+)*$"
+                    "pattern": "\\d+(,\\d+)*$"
                 },
                 "alphabet": {
                     "type": "string",
