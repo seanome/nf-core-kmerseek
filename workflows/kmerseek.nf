@@ -37,12 +37,12 @@ workflow KMERSEEK {
     KMERIZE_QUERY (
         ch_samplesheet
     )
+    ch_versions = ch_versions.mix(KMERIZE_QUERY.out.versions)
 
     KMERIZE_TARGET (
         ch_target
     )
-
-    ch_versions = ch_versions.mix(SOURMASH_SKETCH.out.versions)
+    ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
     //
     // Collate and save software versions
