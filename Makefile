@@ -2,7 +2,7 @@ test: clean
 	nextflow run -profile docker,test --outdir ./results .
 
 debug: clean
-	nextflow run . -profile debug,test,docker --outdir
+	nextflow run . -profile debug,test,docker --outdir ./results
 
 clean:
 	rm -rf .nextflow* results work
