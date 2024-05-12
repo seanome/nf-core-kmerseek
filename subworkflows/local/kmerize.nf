@@ -19,19 +19,19 @@ include { SOURMASH_SKETCH } from '../../modules/nf-core/sourmash/sketch'
 workflow KMERIZE {
 
     take:
-    ch_samplesheet           // meta, fasta: Path to input fasta file
+    proteins           // meta, fasta: Path to input fasta file
 
     main:
 
     ch_versions = Channel.empty()
 
-    ch_samplesheet.view()
+    view(proteins)
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
     SOURMASH_SKETCH (
-        ch_samplesheet
+        proteins
     )
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC

@@ -26,8 +26,10 @@ workflow KMERSEEK {
 
     main:
 
+    // Make the params fasta string into a file
     ch_fasta = file(params.fasta) 
-    ch_target = [id: "${ncbi_annotation.baseName}", ch_fasta]
+    // Make a meta, fasta channel
+    ch_target = [[id: "${ch_fasta.baseName}"], [ch_fasta]]
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
