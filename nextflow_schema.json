@@ -43,6 +43,27 @@
                 }
             }
         },
+        "k_mer_options": {
+            "title": "K-mer Options",
+            "type": "object",
+            "description": "Define options for k-merization with Sourmash",
+            "default": "",
+            "properties": {
+                "ksizes": {
+                    "type": "string",
+                    "default": "k=5,k=6,k=7,k=8,k=9",
+                    "description": "K-mer sizes to use for creating signatures, must be of format k=5,k=6,k=7",
+                    "pattern": "^k=\\d+(,k=\\d+)*$"
+                },
+                "alphabet": {
+                    "type": "string",
+                    "default": "protein",
+                    "description": "Amino acid alphabet to use, must be one of \"protein\" (20-letter), \"dayhoff\" (6-letter), or \"hp\" (2-letter)",
+                    "enum": ["protein", "dayhoff", "hp"]
+                }
+            },
+            "required": ["ksizes", "alphabet"]
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -279,6 +300,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/k_mer_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
