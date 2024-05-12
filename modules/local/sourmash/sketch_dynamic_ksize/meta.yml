@@ -46,6 +46,6 @@ output:
       description: FracMinHash signature of the given sequence
       pattern: "*.{sig}"
 authors:
-  - "@Midnighter"
+  - "@Midnighter,@olgabot"
 maintainers:
-  - "@Midnighter"
+  - "@olgabot"
