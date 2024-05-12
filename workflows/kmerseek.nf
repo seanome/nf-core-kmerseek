@@ -34,7 +34,7 @@ workflow KMERSEEK {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // Split the ksizes so we have them individually for comparisons, and 
+    // Split the ksizes so we have them individually for comparisons, and
     // so the creation of database signatures doesn't run out of memory
     ch_ksizes = Channel.from(params.ksizes?.toString().tokenize(','))
 
