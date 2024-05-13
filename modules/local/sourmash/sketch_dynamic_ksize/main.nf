@@ -1,7 +1,7 @@
 process SOURMASH_SKETCH_DYNAMIC_KSIZE {
-    memory { sequence.size() < 1.MB ? check_max( 1.GB * task.attempt, 'memory'  ) : check_max( 72.GB * task.attempt, 'memory'  ) }
     tag "$meta.id"
     label 'process_single'
+    memory { sequence.size() < 1.MB ? check_max( 1.GB * task.attempt, 'memory'  ) : check_max( 72.GB * task.attempt, 'memory'  ) }
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
