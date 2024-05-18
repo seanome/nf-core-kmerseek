@@ -27,6 +27,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     # so create a CSV file with the fasta sequence name
     echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
+        --debug \\
         -c $task.cpus \\
         $args \\
         --output '${prefix}.${alphabet}.k${ksize}.sig.zip' \\
