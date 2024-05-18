@@ -3,9 +3,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sourmash:4.8.4--hdfd78af_0':
-        'biocontainers/sourmash:4.8.4--hdfd78af_0' }"
+    container "docker.io/olgabot/sourmash_branchwater"
 
     input:
     tuple val(meta), path(sequence)
@@ -21,15 +19,15 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
 
     script:
     // required defaults for the tool to run, but can be overridden
-    def args = alphabet == "protein"
-                ? "protein --singleton --param-string 'scaled=1,k=$ksize,abund'"
-                : "protein --singleton --$alphabet --param-string 'scaled=1,k=$ksize,abund'"
+    def args = "--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    sourmash sketch \\
+    echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > manysketch.csv
+    sourmash scripts manysketch \\
+        -c $task.cpus \\
         $args \\
-        --output '${prefix}.${alphabet}.k${ksize}.sig.gz' \\
-        $sequence
+        --output '${prefix}.${alphabet}.k${ksize}.sig.zip' \\
+        manysketch.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
