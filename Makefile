@@ -1,7 +1,13 @@
-test: clean
+test_conda: clean
+	nextflow run -profile conda,test --outdir ./results .
+
+test_docker: clean
 	nextflow run -profile docker,test --outdir ./results .
 
-debug: clean
+debug_conda: clean
+	nextflow run . -profile debug,test,conda --outdir ./results
+
+debug_docker: clean
 	nextflow run . -profile debug,test,docker --outdir ./results
 
 clean:
