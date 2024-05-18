@@ -7,6 +7,8 @@
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { KMERIZE as KMERIZE_QUERY  } from '../subworkflows/local/kmerize.nf'
+include { KMERIZE as KMERIZE_TARGET } from '../subworkflows/local/kmerize.nf'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
@@ -24,17 +26,32 @@ workflow KMERSEEK {
 
     main:
 
+    // Make the params fasta string into a file
+    ch_fasta = file(params.fasta)
+    // Make a meta, fasta channel for the target (reference) database fasta
+    ch_target = [[id: "${ch_fasta.baseName}"], [ch_fasta]]
+
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC (
-        ch_samplesheet
+    // Split the ksizes so we have them individually for comparisons, and
+    // so the creation of database signatures doesn't run out of memory
+    ch_ksizes = Channel.from(params.ksizes?.toString().tokenize(','))
+
+    KMERIZE_QUERY (
+        ch_samplesheet,
+        params.alphabet,
+        ch_ksizes,
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    ch_versions = ch_versions.mix(KMERIZE_QUERY.out.versions)
+
+
+    KMERIZE_TARGET (
+        ch_target,
+        params.alphabet,
+        ch_ksizes,
+    )
+    ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
     //
     // Collate and save software versions
