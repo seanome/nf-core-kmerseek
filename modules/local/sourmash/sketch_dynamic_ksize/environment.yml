@@ -1,4 +1,4 @@
-name: sourmash_sketch
+name: nf-core-sourmash-branchwater-0.9.3
 channels:
   - conda-forge
   - bioconda
