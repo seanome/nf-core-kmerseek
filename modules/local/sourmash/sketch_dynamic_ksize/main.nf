@@ -23,7 +23,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def BRANCHWATER_VERSION = '0.9.3' // Version not available using command line
     """
-    # manysketch only accepts CSV files (can't use fastas directly), 
+    # manysketch only accepts CSV files (can't use fastas directly),
     # so create a CSV file with the fasta sequence name
     echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
