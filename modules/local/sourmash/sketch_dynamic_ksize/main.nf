@@ -11,7 +11,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     each ksize
 
     output:
-    tuple val(meta), path("*.sig"), emit: signatures
+    tuple val(meta), path("*.sig.zip"), emit: signatures
     path "versions.yml"           , emit: versions
 
     when:
@@ -22,12 +22,12 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     def args = "--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > manysketch.csv
+    echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
         -c $task.cpus \\
         $args \\
         --output '${prefix}.${alphabet}.k${ksize}.sig.zip' \\
-        manysketch.csv
+        ${meta.id}__manysketch.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
