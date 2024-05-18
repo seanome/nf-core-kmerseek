@@ -21,7 +21,10 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     // required defaults for the tool to run, but can be overridden
     def args = "--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def BRANCHWATER_VERSION = '0.9.3' // Version not available using command line
     """
+    # manysketch only accepts CSV files (can't use fastas directly), 
+    # so create a CSV file with the fasta sequence name
     echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
         -c $task.cpus \\
@@ -30,8 +33,9 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
         ${meta.id}__manysketch.csv
 
     cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sourmash: \$(echo \$(sourmash --version 2>&1) | sed 's/^sourmash //' )
-    END_VERSIONS
+"${task.process}":
+    sourmash: \$(echo \$(sourmash --version 2>&1) | sed 's/^sourmash //' )
+    sourmash_plugin_branchwater: $BRANCHWATER_VERSION
+END_VERSIONS
     """
 }
