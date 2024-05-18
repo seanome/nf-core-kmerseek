@@ -1,5 +1,5 @@
 process SOURMASH_SKETCH_DYNAMIC_KSIZE {
-    tag "$meta.id_k${ksize}"
+    tag "${meta.id}_k${ksize}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
