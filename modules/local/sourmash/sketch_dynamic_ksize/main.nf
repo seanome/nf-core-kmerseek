@@ -28,7 +28,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
     """
     sourmash sketch \\
         $args \\
-        --output '${prefix}.${alphabet}.k${ksize}.sig' \\
+        --output '${prefix}.${alphabet}.k${ksize}.sig.gz' \\
         $sequence
 
     cat <<-END_VERSIONS > versions.yml
