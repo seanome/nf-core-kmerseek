@@ -8,7 +8,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SOURMASH_SKETCH_DYNAMIC_KSIZE } from '../../modules/local/sourmash/sketch_dynamic_ksize'
+include { SOURMASH_MANYSKETCH } from '../../modules/local/sourmash/manysketch'
 
 /*
 ========================================================================================
@@ -30,19 +30,19 @@ workflow KMERIZE {
     view(proteins)
 
 
-    SOURMASH_SKETCH_DYNAMIC_KSIZE (
+    SOURMASH_MANYSKETCH (
         proteins,
         alphabet,
         ksizes,
     )
 
-    ch_versions = ch_versions.mix(SOURMASH_SKETCH_DYNAMIC_KSIZE.out.versions)
+    ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC
     // TODO: Add sig2kmer here maybe? Or maybe do that all later
     // TODO: Add k-mer counting with Sourmash NodeGraph here
 
     emit:
-    signatures = SOURMASH_SKETCH_DYNAMIC_KSIZE.out.signatures
+    signatures = SOURMASH_MANYSKETCH.out.signatures
     versions    = ch_versions
 }

@@ -1,4 +1,4 @@
-process SOURMASH_SKETCH_DYNAMIC_KSIZE {
+process SOURMASH_MANYSKETCH {
     tag "${meta.id}_k${ksize}"
     label 'process_low'
 
