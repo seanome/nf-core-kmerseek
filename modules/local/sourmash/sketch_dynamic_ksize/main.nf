@@ -12,7 +12,7 @@ process SOURMASH_SKETCH_DYNAMIC_KSIZE {
 
     output:
     tuple val(meta), path("*.sig.zip"), emit: signatures
-    path "versions.yml"           , emit: versions
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
