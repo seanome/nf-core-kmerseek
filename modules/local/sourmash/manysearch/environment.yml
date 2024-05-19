@@ -1,0 +1,8 @@
+name: nf-core-sourmash-branchwater-0.9.3
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::sourmash_plugin_branchwater=0.9.3
+  - conda-forge::sourmash-minimal=4.8.8

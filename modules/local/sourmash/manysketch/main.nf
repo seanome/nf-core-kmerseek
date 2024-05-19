@@ -11,7 +11,7 @@ process SOURMASH_MANYSKETCH {
     each ksize
 
     output:
-    tuple val(meta), path("*.sig.zip"), emit: signatures
+    tuple val(ksize), val(meta), path("*.sig.zip"), emit: signatures
     path "versions.yml"               , emit: versions
 
     when:
