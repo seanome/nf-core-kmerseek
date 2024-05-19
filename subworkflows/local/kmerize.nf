@@ -9,6 +9,7 @@
 */
 
 include { SOURMASH_MANYSKETCH } from '../../modules/local/sourmash/manysketch'
+include { SEQKIT_SPLIT2       } from '../../modules/local/seqkit/split2'
 
 /*
 ========================================================================================
@@ -27,11 +28,12 @@ workflow KMERIZE {
 
     ch_versions = Channel.empty()
 
-    view(proteins)
-
+    SEQKIT_SPLIT2(
+        proteins,
+    )
 
     SOURMASH_MANYSKETCH (
-        proteins,
+        SEQKIT_SPLIT2.out.reads,
         alphabet,
         ksizes,
     )
