@@ -4,6 +4,12 @@ test_conda: clean
 test_docker: clean
 	nextflow run -profile docker,test --outdir ./results .
 
+test_docker_resume:
+	nextflow run -profile docker,test -resume --outdir ./results .
+
+test_conda_resume:
+	nextflow run -profile conda,test -resume --outdir ./results .
+
 debug_conda: clean
 	nextflow run . -profile debug,test,conda --outdir ./results
 
