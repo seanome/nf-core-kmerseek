@@ -62,6 +62,7 @@ workflow KMERSEEK {
         KMERIZE_TARGET.out.signatures,
         params.alphabet,
         params.threshold,
+        ch_fasta,
     )
     //
     // Collate and save software versions

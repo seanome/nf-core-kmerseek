@@ -9,6 +9,7 @@
 */
 
 include { SOURMASH_MANYSEARCH } from '../../modules/local/sourmash/manysearch'
+include { SEQTK_SUBSEQ        } from '../../modules/nf-core/seqtk/subseq'
 
 /*
 ========================================================================================
@@ -23,6 +24,7 @@ workflow SEARCH {
     db           // ksize, meta, sig: Path to input signature
     alphabet     // string: Alphabet of the input sequences (dna, protein, dayhoff, hp)
     threshold    // float: Jaccard similarity threshold for sourmash search
+    db_fasta     // fasta: Channel Path to the database fasta file
 
     main:
 
@@ -39,15 +41,29 @@ workflow SEARCH {
         alphabet,
         threshold,
     )
-
     ch_versions = ch_versions.mix(SOURMASH_MANYSEARCH.out.versions)
+
+    // Create a channel from the db path
+    ch_fasta = Channel.fromPath(db_fasta)
+    // Trick seqtk into using the metadata from the lists
+    fasta_combined_matchlists = ch_fasta.combine(SOURMASH_MANYSEARCH.out.matches_names_lst)
+    fasta_combined_matchlists.view()
+    fasta_matchlists = db_combined_matchlists.map{ it -> [it[1], it[0], it[2]]}
+    fasta_matchlists.view()
+    fasta_for_subseq = fasta_matchlists.map{ it -> [[id: it[0]], it[1]]}
+    lists_for_subseq = fasta_matchlists.map{ it -> [it[2]]}
+
+    // SEQTK_SUBSEQ(
+    //     fasta_for_subseq,
+    //     lists_for_subseq,
+    // )
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC
     // TODO: Add sig2kmer here maybe? Or maybe do that all later
-    // TODO: Add k-mer counting with Sourmash NodeGraph here
+    // TODO: Add k-mer counting with Sourmash NodeGraph here -> or maybe make one signature across all?
 
     emit:
     matches_csv = SOURMASH_MANYSEARCH.out.matches_csv
-    matches_names_txt = SOURMASH_MANYSEARCH.out.matches_names_txt
+    matches_names_txt = SOURMASH_MANYSEARCH.out.matches_names_lst
     versions    = ch_versions
 }
