@@ -25,7 +25,10 @@ process SOURMASH_MANYSKETCH {
     """
     # manysketch only accepts CSV files (can't use fastas directly),
     # so create a CSV file with the fasta sequence name
-    echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
+    echo "name,genome_filename,protein_filename" > ${meta.id}__manysketch.csv
+    for f in $sequence; do
+        echo "\$(basename \$f),,\$f" >> ${meta.id}__manysketch.csv
+    done
     sourmash scripts manysketch \\
         --debug \\
         -c $task.cpus \\
