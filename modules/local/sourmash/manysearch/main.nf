@@ -15,7 +15,7 @@ process SOURMASH_MANYSEARCH {
     // tuple val([id: "${query_meta.id}.${db_meta.id}.k${ksize}", k: val(ksize), moltype: alphabet, query: query_meta.id, db: db_meta.id]), path("*.csv")      , emit: matches_csv
     // Use simple string instead of creating a new metadata object
     tuple val("${query_meta.id}.${db_meta.id}.k${ksize}"), path("*.csv")      , emit: matches_csv
-    tuple val("${query_meta.id}.${db_meta.id}.k${ksize}"), path("*.names.txt"), emit: matches_names_txt
+    tuple val("${query_meta.id}.${db_meta.id}.k${ksize}"), path("*.names.lst"), emit: matches_names_lst
     path "versions.yml"                  , emit: versions
 
     when:
@@ -27,7 +27,8 @@ process SOURMASH_MANYSEARCH {
     // def args = "--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"
     def prefix = task.ext.prefix ?: "${query_meta.id}.${db_meta.id}.k${ksize}"
     def output_csv = "${prefix}.csv"
-    def matching_names = "${prefix}.names.txt"
+    // use .lst ending to be compatible with seqtk/subseq module
+    def matching_names = "${prefix}.names.lst"
     def BRANCHWATER_VERSION = '0.9.3' // Version not available using command line
     """
     sourmash scripts manysearch \\
