@@ -20,8 +20,8 @@ input:
         e.g. [ id:'test', single_end:false ]
   - reads:
       type: file
-      description: FastQ files
-      pattern: "*.{fq.gz/fastq.gz}"
+      description: FASTA or FASTQ file containing (genomic, transcriptomic, or proteomic) sequence data
+      pattern: "*.{fna,fa,fasta,fastq,fq,faa}(.gz)?"
 output:
   - meta:
       type: map
@@ -30,13 +30,14 @@ output:
         e.g. [ id:'test', single_end:false ]
   - reads:
       type: file
-      description: Split fastq files
-      pattern: "*.{fq.gz/fastq.gz}"
+      description: Split FASTA or FASTQ file containing (genomic, transcriptomic, or proteomic) sequence data
+      pattern: "*.{fna,fa,fasta,fastq,fq,faa}(.gz)?"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
+  - "@olgabot"
 maintainers:
   - "@FriederikeHanssen"
