@@ -64,6 +64,19 @@
             },
             "required": ["ksizes", "alphabet"]
         },
+        "seqkit_options": {
+            "title": "Seqkit options",
+            "type": "object",
+            "description": "Parameters used to split input sequences to subsets to make Sourmash not take as much memory",
+            "default": "",
+            "properties": {
+                "n_seq_per_chunk": {
+                    "type": "integer",
+                    "default": 100000,
+                    "description": "Number of sequences to split up input fasta files into, to speed up and lower the resource costs of sourmash"
+                }
+            }
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -303,6 +316,9 @@
         },
         {
             "$ref": "#/definitions/k_mer_options"
+        },
+        {
+            "$ref": "#/definitions/seqkit_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
