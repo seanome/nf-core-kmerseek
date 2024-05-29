@@ -1,6 +1,5 @@
 process SOURMASH_MANYSKETCH {
     tag "${meta.id}_k${ksize}"
-    label 'process_low'
 
     conda "${moduleDir}/environment.yml"
     container "docker.io/olgabot/sourmash_branchwater"
@@ -29,6 +28,8 @@ process SOURMASH_MANYSKETCH {
     for f in $sequence; do
         echo "\$(basename \$f),,\$f" >> ${meta.id}__manysketch.csv
     done
+    head ${meta.id}__manysketch.csv
+    wc -l ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
         --debug \\
         -c $task.cpus \\
