@@ -1,3 +1,6 @@
+test_podman: clean
+	nextflow run -profile test,podman --outdir ./results .
+
 test_conda: clean
 	nextflow run -profile conda,test --outdir ./results .
 
