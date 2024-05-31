@@ -36,7 +36,7 @@ workflow KMERIZE {
         .transpose()
         .map {
             meta, reads -> [
-                [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true], 
+                [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true],
                 reads
             ]
         }
