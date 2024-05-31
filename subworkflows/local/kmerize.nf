@@ -32,8 +32,18 @@ workflow KMERIZE {
         proteins,
     )
 
+    split_reads = SEQKIT_SPLIT2.out.reads
+        .transpose()
+        .view()
+        .map {
+            meta, reads -> [
+                [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true], 
+                reads
+            ]
+        }
+
     SOURMASH_MANYSKETCH (
-        SEQKIT_SPLIT2.out.reads,
+        split_reads,
         alphabet,
         ksizes,
     )
