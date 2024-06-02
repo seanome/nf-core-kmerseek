@@ -31,6 +31,8 @@ workflow KMERIZE {
     SEQKIT_SPLIT2(
         proteins,
     )
+    ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
+
 
     split_reads = SEQKIT_SPLIT2.out.reads
         .transpose()
