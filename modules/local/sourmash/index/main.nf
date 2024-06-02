@@ -8,7 +8,7 @@ process SOURMASH_INDEX {
     input:
     tuple val(meta), path(siglist)
     val(alphabet)
-    val(ksize)
+    each ksize
 
     output:
     tuple val(meta), path("*.sbt.zip"), emit: signature_index
@@ -21,7 +21,16 @@ process SOURMASH_INDEX {
     // --ksize needs to be specified with the desired k-mer size to be selected in ext.args
     def args = task.ext.args ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
+    meta.ksize = ksize
+    meta.alphabet = alphabet
     """
+    # Branchwater version of index only accepts CSV files (can't use signatures directly),
+    # so create a CSV file with the signature file name
+    touch ${meta.id}__index.csv
+    for sig in \$(cat $siglist); do
+        echo \$sig >> ${meta.id}__index.csv
+    done
+    
     # Branchwater version = "sourmash scripts" for now
     sourmash scripts index \\
         --cores $task.cpus \\
@@ -29,7 +38,7 @@ process SOURMASH_INDEX {
         --moltype $alphabet \\
         $args \\
         '${prefix}.${alphabet}.k${ksize}.index.zip' \\
-        $siglist
+        ${meta.id}__index.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

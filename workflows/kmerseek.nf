@@ -54,13 +54,12 @@ workflow KMERSEEK {
     )
     ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
-    target_siglist = KMERIZE_TARGET.out.signatures.collectFile(
-        storeDir: "${params.outdir}/signatures",
-        name: 'target_signatures.tsv',
-        sort: true,
-        newLine: true
+
+    INDEX (
+        KMERIZE_TARGET.out.signatures,
+        params.alphabet,
+        ch_ksizes
     )
-    target_siglist.view()
     
 
     //

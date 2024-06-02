@@ -16,14 +16,17 @@ include { SOURMASH_INDEX } from '../../modules/local/sourmash/index'
 ========================================================================================
 */
 
-workflow KMERIZE {
+workflow INDEX {
 
     take:
-    proteins           // meta, fasta: Path to input fasta file
-    alphabet           // string: Alphabet of the input sequences (dna, protein, dayhoff, hp)
-    ksizes             // string: k=\d+,k=\d+ k-mer sizes to use
+    target_db_sigs     // meta, sigs: Sourmash signaturs
+    alphabet           // string: Alphabet of the input sequences (protein, dayhoff, hp)
+    ksizes             // Channel of integers for k-mer sizes to use
 
     main:
+    
+    target_db_sigs.view()
 
+    SOURMASH_INDEX(target_db_sigs, alphabet, ksizes)
 
 }
