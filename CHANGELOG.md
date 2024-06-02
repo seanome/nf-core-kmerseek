@@ -9,6 +9,9 @@ Initial release of nf-core/kmerseek, created with the [nf-core](https://nf-co.re
 
 ### `Added`
 
+- [PR #1](https://github.com/olgabot/nf-core-kmerseek/pull/1) Added `sourmash scripts manysketch` to create protein sequence k-mer signatures
+- [PR #2](https://github.com/olgabot/nf-core-kmerseek/pull/2) added `seqkit split2` to make smaller fasta files for `sourmash scripts manysketch`
+
 ### `Fixed`
 
 ### `Dependencies`
