@@ -58,6 +58,16 @@ Each row represents a fastq file (single-end) or a pair of fastq files (paired e
 
 -->
 
+First, prepare a samplesheet with your input data that looks as follows:
+
+```csv title="samplesheet.csv"
+sample,fasta
+snap25a,snap25a_mxe_exon.fa
+snap25b,snap2ba_mxe_exon.fa.gz
+```
+
+Each row represents a single query protein sequence as a fasta file.
+
 Now, you can run the pipeline using:
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
