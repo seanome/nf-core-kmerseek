@@ -12,9 +12,24 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
+- [Seqkit Split2](#seqkit-split2) - split up a protein fasta file into smaller files for better performance with Sourmash
 - [Sourmash](#sourmash) - Convert protein sequence into k-mer signatures
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+
+### Seqkit Split2
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `seqkit/<sample_name>`
+  - `<sample_name>.part_*.fasta.gz` Subset of fasta file, split into 100,000 fasta entries at a time
+
+</details>
+
+<!-- Cribbed from https://nf-co.re/funcscan/dev/docs/output -->
+
+SeqKit is a cross-platform and ultrafast toolkit for FASTA/Q file manipulation. In this case, we use the [split2](https://bioinf.shenwei.me/seqkit/usage/#split2) submodule to separate fasta files by size of parts. By default, we split The number of fasta entries into 100,000, and this value is set by the parameter `--split`.
 
 ### Sourmash
 
