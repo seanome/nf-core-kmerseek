@@ -29,7 +29,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 <!-- Cribbed from https://nf-co.re/funcscan/dev/docs/output -->
 
-SeqKit is a cross-platform and ultrafast toolkit for FASTA/Q file manipulation. In this case, we use the [split2](https://bioinf.shenwei.me/seqkit/usage/#split2) submodule to separate fasta files by size of parts. By default, we split The number of fasta entries into 100,000, and this value is set by the parameter `--split`.
+SeqKit is a cross-platform and ultrafast toolkit for FASTA/Q file manipulation. In this case, we use the [split2](https://bioinf.shenwei.me/seqkit/usage/#split2) submodule to separate fasta files by size of parts. By default, we split The number of fasta entries into 100,000, and this value is set by the parameter `--split2_size`.
 
 ### Sourmash
 

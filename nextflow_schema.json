@@ -101,7 +101,7 @@
             "description": "Define options for preprocessing fasta files to be smaller for creating signatures",
             "default": "",
             "properties": {
-                "split": {
+                "split2_size": {
                     "type": "integer",
                     "default": 100000,
                     "hidden": true,
