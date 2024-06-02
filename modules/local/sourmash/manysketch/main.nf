@@ -1,6 +1,5 @@
 process SOURMASH_MANYSKETCH {
     tag "${meta.id}_k${ksize}"
-    label 'process_low'
 
     conda "${moduleDir}/environment.yml"
     container "docker.io/olgabot/sourmash_branchwater"
@@ -25,7 +24,12 @@ process SOURMASH_MANYSKETCH {
     """
     # manysketch only accepts CSV files (can't use fastas directly),
     # so create a CSV file with the fasta sequence name
-    echo "name,genome_filename,protein_filename\n${meta.id},,${sequence}" > ${meta.id}__manysketch.csv
+    echo "name,genome_filename,protein_filename" > ${meta.id}__manysketch.csv
+    for f in $sequence; do
+        echo "\$(basename \$f),,\$f" >> ${meta.id}__manysketch.csv
+    done
+    head ${meta.id}__manysketch.csv
+    wc -l ${meta.id}__manysketch.csv
     sourmash scripts manysketch \\
         --debug \\
         -c $task.cpus \\

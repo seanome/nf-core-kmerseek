@@ -52,7 +52,7 @@
                 "ksizes": {
                     "type": "string",
                     "default": "5,6,7,8,9",
-                    "description": "K-mer sizes to use for creating signatures, must be of format k=5,k=6,k=7",
+                    "description": "K-mer sizes to use for creating signatures, must be of format 1",
                     "pattern": "\\d+(,\\d+)*$"
                 },
                 "alphabet": {
@@ -92,6 +92,20 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                }
+            }
+        },
+        "seqkit_options": {
+            "title": "Seqkit Options",
+            "type": "object",
+            "description": "Define options for preprocessing fasta files to be smaller for creating signatures",
+            "default": "",
+            "properties": {
+                "split2_size": {
+                    "type": "integer",
+                    "default": 100000,
+                    "hidden": true,
+                    "description": "How many fasta entries to have per split of a fasta file. Increasing is not recommended as it will drastically decrease performance, but feel free to decrease if you have smaller target database files, with fewer fasta entries"
                 }
             }
         },
@@ -306,6 +320,9 @@
         },
         {
             "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/seqkit_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"
