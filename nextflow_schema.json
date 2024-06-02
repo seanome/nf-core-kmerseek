@@ -64,19 +64,6 @@
             },
             "required": ["ksizes", "alphabet"]
         },
-        "seqkit_options": {
-            "title": "Seqkit options",
-            "type": "object",
-            "description": "Parameters used to split input sequences to subsets to make Sourmash not take as much memory",
-            "default": "",
-            "properties": {
-                "n_seq_per_chunk": {
-                    "type": "integer",
-                    "default": 100000,
-                    "description": "Number of sequences to split up input fasta files into, to speed up and lower the resource costs of sourmash"
-                }
-            }
-        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -105,6 +92,20 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                }
+            }
+        },
+        "seqkit_options": {
+            "title": "Seqkit Options",
+            "type": "object",
+            "description": "Define options for preprocessing fasta files to be smaller for creating signatures",
+            "default": "",
+            "properties": {
+                "split": {
+                    "type": "integer",
+                    "default": 100000,
+                    "hidden": true,
+                    "description": "How many fasta entries to have per split of a fasta file"
                 }
             }
         },
@@ -318,10 +319,10 @@
             "$ref": "#/definitions/k_mer_options"
         },
         {
-            "$ref": "#/definitions/seqkit_options"
+            "$ref": "#/definitions/reference_genome_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/definitions/seqkit_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"
