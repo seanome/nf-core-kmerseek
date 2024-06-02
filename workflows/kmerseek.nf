@@ -53,6 +53,14 @@ workflow KMERSEEK {
     )
     ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
+    target_siglist = KMERIZE_TARGET.out.signatures.collectFile(
+        storeDir: "${params.outdir}/signatures",
+        name: 'target_signatures.tsv',
+        sort: true,
+        newLine: true
+    )
+    target_siglist.view()
+
     //
     // Collate and save software versions
     //
