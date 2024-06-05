@@ -27,9 +27,6 @@ workflow KMERIZE {
 
     ch_versions = Channel.empty()
 
-    view(proteins)
-
-
     SOURMASH_MANYSKETCH (
         proteins,
         alphabet,

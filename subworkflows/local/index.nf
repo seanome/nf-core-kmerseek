@@ -23,6 +23,8 @@ workflow INDEX {
 
     main:
 
+    ch_versions = Channel.empty()
+
     target_db_sigs.view{ "target_db_sigs: ${it}" }
 
     SOURMASH_INDEX(target_db_sigs)
