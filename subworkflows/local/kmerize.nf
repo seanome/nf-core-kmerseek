@@ -37,7 +37,7 @@ workflow KMERIZE {
     )
 
     sigs_ksize = SOURMASH_MANYSKETCH.out.signatures
-        .map{ meta, sig -> 
+        .map{ meta, sig ->
             tokens = sig.getBaseName().tokenize(".")
             ksize = tokens[-2].replace("k", "")
             meta.ksize = ksize
