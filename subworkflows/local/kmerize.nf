@@ -36,6 +36,15 @@ workflow KMERIZE {
         ksizes,
     )
 
+    sigs_ksize = SOURMASH_MANYSKETCH.out.signatures
+        .map{ meta, sig -> 
+            tokens = sig.getBaseName().tokenize(".")
+            ksize = tokens[-2].replace("k", "")
+            meta.ksize = ksize
+            meta.alphabet = alphabet
+            [meta, sig]}
+    sigs_ksize.view()
+
     ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
 
     // TODO: Add `sourmash sig describe` to get # kmers and other info about the signature to send to MultiQC
@@ -43,6 +52,6 @@ workflow KMERIZE {
     // TODO: Add k-mer counting with Sourmash NodeGraph here
 
     emit:
-    signatures = SOURMASH_MANYSKETCH.out.signatures
+    signatures  = SOURMASH_MANYSKETCH.out.signatures
     versions    = ch_versions
 }

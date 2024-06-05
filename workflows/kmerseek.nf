@@ -57,8 +57,6 @@ workflow KMERSEEK {
 
     INDEX (
         KMERIZE_TARGET.out.signatures,
-        params.alphabet,
-        ch_ksizes
     )
     
 
