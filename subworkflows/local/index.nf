@@ -27,4 +27,9 @@ workflow INDEX {
 
     SOURMASH_INDEX(target_db_sigs)
 
+    ch_versions = ch_versions.mix(SOURMASH_INDEX.out.versions)
+
+    emit:
+    signature_index  = SOURMASH_INDEX.out.signature_index
+    versions         = ch_versions
 }

@@ -58,6 +58,8 @@ workflow KMERSEEK {
     INDEX (
         KMERIZE_TARGET.out.signatures,
     )
+    ch_versions = ch_versions.mix(INDEX.out.versions)
+
 
     //
     // Collate and save software versions
