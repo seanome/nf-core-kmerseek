@@ -27,10 +27,12 @@ workflow INDEX {
 
     // target_db_sigs.view{ "target_db_sigs: ${it}" }
 
-    target_db_sigs_grouped = target_db_sigs.
-        map{ 
+    target_db_sigs_grouped = target_db_sigs
+        .view{ "target_db_sigs: ${it}" }
+        .map{ 
             meta, reads ->
-            [[id: meta.aggregate_id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], reads] }.groupTuple()
+            [[id: meta.original_id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], reads] }
+        .groupTuple(by: 0)
     target_db_sigs_grouped.view { "target_db_sigs_grouped: ${it}" }
 
     SOURMASH_INDEX(target_db_sigs_grouped)
