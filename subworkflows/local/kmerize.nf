@@ -38,16 +38,7 @@ workflow KMERIZE {
         .transpose()
         .map {
             meta, reads -> [
-                [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true],
-                reads
-            ]
-        }
-
-    split_reads = SEQKIT_SPLIT2.out.reads
-        .transpose()
-        .map {
-            meta, reads -> [
-                [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true], 
+                [id: reads.getBaseName(), original_id:meta.id, single_end:true],
                 reads
             ]
         }
@@ -60,12 +51,8 @@ workflow KMERIZE {
 
     sigs_ksize = SOURMASH_MANYSKETCH.out.signatures
         .map{ meta, sig ->
-            tokens = sig.getBaseName().tokenize(".")
-            ksize = tokens[-2].replace("k", "")
-            meta.ksize = ksize
-            meta.alphabet = alphabet
-            [meta, sig]}
-    // sigs_ksize.view()
+            [assignKsizeAlphabet(meta, sig, alphabet), sig]}
+    sigs_ksize.view{ "sigs_ksize: ${it}" }
 
     ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
 
@@ -74,6 +61,19 @@ workflow KMERIZE {
     // TODO: Add k-mer counting with Sourmash NodeGraph here
 
     emit:
-    signatures  = SOURMASH_MANYSKETCH.out.signatures
+    signatures  = sigs_ksize
     versions    = ch_versions
+}
+
+
+def assignKsizeAlphabet(LinkedHashMap meta, sig, String alphabet) {
+    def tokens = sig.getBaseName().tokenize(".")
+    def ksize = tokens[-2].replace("k", "")
+    new_meta = [:]
+    new_meta.id = meta.id
+    new_meta.original_id = meta.original_id
+    new_meta.single_end = meta.single_end
+    new_meta.ksize = ksize
+    new_meta.alphabet = alphabet
+    return new_meta
 }
