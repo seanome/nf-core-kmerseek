@@ -45,7 +45,6 @@ workflow KMERIZE {
 
     split_reads = SEQKIT_SPLIT2.out.reads
         .transpose()
-        .view()
         .map {
             meta, reads -> [
                 [id: reads.getBaseName(), aggregate_id:meta.id, single_end:true], 
@@ -66,7 +65,7 @@ workflow KMERIZE {
             meta.ksize = ksize
             meta.alphabet = alphabet
             [meta, sig]}
-    sigs_ksize.view()
+    // sigs_ksize.view()
 
     ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
 
