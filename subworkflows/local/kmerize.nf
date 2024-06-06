@@ -52,7 +52,7 @@ workflow KMERIZE {
     sigs_ksize = SOURMASH_MANYSKETCH.out.signatures
         .map{ meta, sig ->
             [assignKsizeAlphabet(meta, sig, alphabet), sig]}
-    sigs_ksize.view{ "sigs_ksize: ${it}" }
+    // sigs_ksize.view{ "sigs_ksize: ${it}" }
 
     ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
 
