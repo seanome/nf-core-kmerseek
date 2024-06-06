@@ -9,7 +9,7 @@ process SOURMASH_INDEX {
     tuple val(meta), path(siglist)
 
     output:
-    tuple val(meta), path("*.sbt.zip"), emit: signature_index
+    tuple val(meta), path("*.index.zip"), emit: signature_index
     path "versions.yml"               , emit: versions
 
     when:
@@ -24,7 +24,7 @@ process SOURMASH_INDEX {
     # Branchwater version of index only accepts CSV files (can't use signatures directly),
     # so create a CSV file with the signature file name
     touch ${meta.id}__index.csv
-    for sig in \$(cat $siglist); do
+    for sig in $siglist; do
         echo \$sig >> ${meta.id}__index.csv
     done
 
@@ -33,8 +33,9 @@ process SOURMASH_INDEX {
         --cores $task.cpus \\
         --ksize $meta.ksize \\
         --moltype $meta.alphabet \\
+        --scaled 1 \\
         $args \\
-        '${prefix}.${meta.alphabet}.k${meta.ksize}.index.zip' \\
+        --output '${prefix}.${meta.alphabet}.k${meta.ksize}.index.zip' \\
         ${meta.id}__index.csv
 
     cat <<-END_VERSIONS > versions.yml
