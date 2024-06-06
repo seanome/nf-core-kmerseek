@@ -1,5 +1,5 @@
 process SOURMASH_INDEX {
-    tag "$meta.id"
+    tag "${meta.id}__k${meta.ksize}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
