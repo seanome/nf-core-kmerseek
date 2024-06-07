@@ -24,9 +24,7 @@ process SOURMASH_SIGCAT {
     //               For Conda, the build (i.e. "h9402c20_2") must be EXCLUDED to support installation on different operating systems.
     // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/YOUR-TOOL-HERE':
-        'biocontainers/YOUR-TOOL-HERE' }"
+    container "docker.io/olgabot/sourmash_branchwater"
 
     input:
     // TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
@@ -35,20 +33,20 @@ process SOURMASH_SIGCAT {
     //               https://github.com/nf-core/modules/blob/master/modules/nf-core/bwa/index/main.nf
     // TODO nf-core: Where applicable please provide/convert compressed files as input/output
     //               e.g. "*.fastq.gz" and NOT "*.fastq", "*.bam" and NOT "*.sam" etc.
-    tuple val(meta), path(bam)
+    tuple val(meta), path(siglist)
 
     output:
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.bam"), emit: bam
+    tuple val(meta), path("*__manifest.zip"), emit: manifest
     // TODO nf-core: List additional required output channels/values here
-    path "versions.yml"           , emit: versions
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.alphabet}.k${meta.ksize}"
     // TODO nf-core: Where possible, a command MUST be provided to obtain the version number of the software e.g. 1.10
     //               If the software is unable to output a version number on the command-line then it can be manually specified
     //               e.g. https://github.com/nf-core/modules/blob/master/modules/nf-core/homer/annotatepeaks/main.nf
@@ -59,17 +57,21 @@ process SOURMASH_SIGCAT {
     // TODO nf-core: Please replace the example samtools command below with your module's command
     // TODO nf-core: Please indent the command appropriately (4 spaces!!) to help with readability ;)
     """
-    samtools \\
-        sort \\
-        $args \\
-        -@ $task.cpus \\
-        -o ${prefix}.bam \\
-        -T $prefix \\
-        $bam
+    # To avoid long argument lists with "too many arguments" error, we will create a manifest file
+    # so create a CSV file with the signature file name
+    touch ${prefix}__filelist.csv
+    for sig in $siglist; do
+        echo \$sig >> ${prefix}__filelist.csv
+    done
+
+
+    sourmash sig cat \\
+        --from-file ${prefix}__filelist.csv \\
+        -o ${prefix}__manifest.zip
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sourmash: \$(samtools --version |& sed '1!d ; s/samtools //')
+        sourmash: \$(echo \$(sourmash --version 2>&1) | sed 's/^sourmash //' )
     END_VERSIONS
     """
 
@@ -81,11 +83,11 @@ process SOURMASH_SIGCAT {
     //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
     //               Complex example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bedtools/split/main.nf#L38-L54
     """
-    touch ${prefix}.bam
+    touch ${prefix}__manifest.zip
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sourmash: \$(samtools --version |& sed '1!d ; s/samtools //')
+        sourmash: \$(echo \$(sourmash --version 2>&1) | sed 's/^sourmash //' )
     END_VERSIONS
     """
 }
