@@ -6,10 +6,10 @@ process SOURMASH_INDEX {
     container "docker.io/olgabot/sourmash_branchwater"
 
     input:
-    tuple val(meta), path(siglist)
+    tuple val(meta), path(manifest)
 
     output:
-    tuple val(meta), path("*.index.zip"), emit: signature_index
+    tuple val(meta), path("*.index.rocksdb"), emit: signature_index
     path "versions.yml"               , emit: versions
 
     when:
@@ -18,16 +18,9 @@ process SOURMASH_INDEX {
     script:
     // --ksize needs to be specified with the desired k-mer size to be selected in ext.args
     def args = task.ext.args ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.alphabet}.k${meta.ksize}"
 
     """
-    # Branchwater version of index only accepts CSV files (can't use signatures directly),
-    # so create a CSV file with the signature file name
-    touch ${meta.id}__index.csv
-    for sig in $siglist; do
-        echo \$sig >> ${meta.id}__index.csv
-    done
-
     # Branchwater version = "sourmash scripts" for now
     sourmash scripts index \\
         --cores $task.cpus \\
@@ -35,8 +28,8 @@ process SOURMASH_INDEX {
         --moltype $meta.alphabet \\
         --scaled 1 \\
         $args \\
-        --output '${prefix}.${meta.alphabet}.k${meta.ksize}.index.zip' \\
-        ${meta.id}__index.csv
+        --output '${prefix}.${meta.alphabet}.k${meta.ksize}.index.rocksdb' \\
+        $manifest
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
