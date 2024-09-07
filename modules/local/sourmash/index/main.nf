@@ -6,7 +6,7 @@ process SOURMASH_INDEX {
     container "docker.io/olgabot/sourmash_branchwater:0.9.7"
 
     input:
-    tuple val(meta), path(manifest)
+    tuple val(meta), path(siglist)
 
     output:
     tuple val(meta), path("*.index.rocksdb"), emit: signature_index
@@ -21,15 +21,22 @@ process SOURMASH_INDEX {
     def prefix = task.ext.prefix ?: "${meta.id}.${meta.alphabet}.k${meta.ksize}"
 
     """
+    # To avoid long argument lists with "too many arguments" error, we will create a manifest file
+    # so create a CSV file with the signature file name
+    touch ${prefix}__filelist.csv
+    for sig in $siglist; do
+        echo \$sig >> ${prefix}__filelist.csv
+    done
+
+
     # Branchwater version = "sourmash scripts" for now
     sourmash scripts index \\
         --cores $task.cpus \\
         --ksize $meta.ksize \\
         --moltype $meta.alphabet \\
         --scaled 1 \\
-        $args \\
-        --output '${prefix}.${meta.alphabet}.k${meta.ksize}.index.rocksdb' \\
-        $manifest
+        --output '${prefix}.index.rocksdb' \\
+        ${prefix}__filelist.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

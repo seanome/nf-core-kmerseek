@@ -64,7 +64,6 @@ process SOURMASH_SIGCAT {
         echo \$sig >> ${prefix}__filelist.csv
     done
 
-
     sourmash sig cat \\
         --from-file ${prefix}__filelist.csv \\
         -o ${prefix}__manifest.zip

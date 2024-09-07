@@ -8,7 +8,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SOURMASH_SIGCAT } from '../../modules/local/sourmash/sigcat'
+include { SOURMASH_MANYSEARCH } from '../../modules/local/sourmash/may'
 include { SOURMASH_INDEX } from '../../modules/local/sourmash/index'
 
 /*
@@ -36,11 +36,9 @@ workflow INDEX {
         .groupTuple(by: 0)
     // target_db_sigs_grouped.view { "target_db_sigs_grouped: ${it}" }
 
-    // Create a manifest CSV of all the signatures
-    // Doesn't actually concatenate them, that would take forever
-    // SOURMASH_SIGCAT(target_db_sigs_grouped)
+    SOURMASH_SIGCAT(target_db_sigs_grouped)
 
-    SOURMASH_INDEX(target_db_sigs_grouped)
+    SOURMASH_INDEX(SOURMASH_SIGCAT.out.manifest)
 
     ch_versions = ch_versions.mix(SOURMASH_INDEX.out.versions)
 
