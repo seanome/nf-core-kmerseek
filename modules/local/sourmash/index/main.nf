@@ -28,7 +28,6 @@ process SOURMASH_INDEX {
         echo \$sig >> ${prefix}__filelist.csv
     done
 
-
     # Branchwater version = "sourmash scripts" for now
     sourmash scripts index \\
         --cores $task.cpus \\
