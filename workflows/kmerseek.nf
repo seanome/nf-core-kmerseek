@@ -4,14 +4,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { FASTQC                    } from '../modules/nf-core/fastqc/main'
+include { MULTIQC                   } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { KMERIZE as KMERIZE_QUERY  } from '../subworkflows/local/kmerize.nf'
 include { KMERIZE as KMERIZE_TARGET } from '../subworkflows/local/kmerize.nf'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
+include { INDEX                     } from '../subworkflows/local/index.nf'
+include { paramsSummaryMultiqc      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText    } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,6 +53,13 @@ workflow KMERSEEK {
         ch_ksizes,
     )
     ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
+
+
+    INDEX (
+        KMERIZE_TARGET.out.signatures,
+    )
+    ch_versions = ch_versions.mix(INDEX.out.versions)
+
 
     //
     // Collate and save software versions

@@ -20,6 +20,11 @@
                         "git_sha": "2be41ca2cc780eca4293d1b0dd3850b0b7ac40a3",
                         "installed_by": ["modules"]
                     },
+                    "sourmash/index": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
                     "sourmash/sketch": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
