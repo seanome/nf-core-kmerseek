@@ -1,7 +1,8 @@
-name: sourmash_index
+name: nf-core-sourmash-branchwater-0.9.7
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::sourmash=4.8.4
+  - conda-forge::sourmash-minimal=4.8.11
+  - conda-forge::sourmash_plugin_branchwater=0.9.7

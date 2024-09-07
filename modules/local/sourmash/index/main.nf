@@ -3,7 +3,7 @@ process SOURMASH_INDEX {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "docker.io/olgabot/sourmash_branchwater"
+    container "docker.io/olgabot/sourmash_branchwater:0.9.7"
 
     input:
     tuple val(meta), path(manifest)
