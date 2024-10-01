@@ -52,12 +52,13 @@ workflow KMERSEEK {
         params.alphabet,
         ch_ksizes,
     )
+    ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
     SEARCH (
         KMERIZE_QUERY.out.signatures,
         KMERIZE_TARGET.out.signatures,
     )
-    ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
+    ch_versions = ch_versions.mix(SEARCH.out.versions)
 
     //
     // Collate and save software versions
