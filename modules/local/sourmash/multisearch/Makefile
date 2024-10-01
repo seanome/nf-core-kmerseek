@@ -1,7 +1,9 @@
+NAME=olgabot/sourmash_branchwater_multisearch_prob_overlap
+
 all: build push
 
 build:
-	docker build -t olgabot/sourmash_branchwater .
+	docker build -t ${NAME} .
 
 push:
-	docker push olgabot/sourmash_branchwater
+	docker push ${NAME}
