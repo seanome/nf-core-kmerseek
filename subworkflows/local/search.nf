@@ -35,19 +35,10 @@ workflow SEARCH {
                     sig
                 ]
         }
-        // .view{ "against_sigs_meta_ksize_alphabet: ${it}" }
-        .map{
-            meta, sig ->
-                [
-                    [ksize: meta.ksize, alphabet: meta.alphabet], 
-                    [id: meta.id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], 
-                    sig
-                ] 
-            }
     // against_sigs_ksize_alphabet.view { "against_sigs_ksize_alphabet: ${it}" }
 
     query_sigs_ksize_alphabet = query_sigs
-        .view{ "query_sigs: ${it}" }
+        // .view{ "query_sigs: ${it}" }
         .map{
             meta, sig ->
                 // Necessary to clone and create a new local variable with "def" 
@@ -57,19 +48,11 @@ workflow SEARCH {
                 new_meta.ksize = split[-2].strip('k') as Integer
                 new_meta.alphabet = split[-3]
                 [
+                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet]
                     new_meta, 
                     sig
                 ]
         }
-        // .view{ "query_sigs_meta_ksize_alphabet: ${it}" }
-        .map{
-            meta, sig ->
-                [
-                    [ksize: meta.ksize, alphabet: meta.alphabet], 
-                    [id: meta.id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], 
-                    sig
-                ] 
-            }
     // query_sigs_ksize_alphabet.view { "query_sigs_ksize_alphabet: ${it}" }
 
     query_against = query_sigs_ksize_alphabet.join(against_sigs_ksize_alphabet, by:0)
