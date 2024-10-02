@@ -56,7 +56,7 @@ workflow SEARCH {
     // query_sigs_ksize_alphabet.view { "query_sigs_ksize_alphabet: ${it}" }
 
     query_against = query_sigs_ksize_alphabet.join(against_sigs_ksize_alphabet, by:0)
-        .view{ "query_against: ${it}" }
+        // .view{ "query_against: ${it}" }
 
     SOURMASH_MULTISEARCH(
         query_against
