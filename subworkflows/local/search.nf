@@ -20,18 +20,22 @@ workflow SEARCH {
     // TODO nf-core: substitute modules here for the modules of your subworkflow
 
     against_sigs_ksize_alphabet = against_sigs
-        .view{ "against_sigs: ${it}" }
+        // .view{ "against_sigs: ${it}" }
         .map{
             meta, sig ->
+                // Necessary to clone and create a new local variable with "def" 
+                // because Nextflow/Groovy scoping is weird
+                def new_meta = meta.clone()
                 split = sig.baseName.tokenize('.')
-                meta.ksize = split[-2].strip('k') as Integer
-                meta.alphabet = split[-3]
+                new_meta.ksize = split[-2].strip('k') as Integer
+                new_meta.alphabet = split[-3]
                 [
-                    meta, 
+                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet]
+                    new_meta, 
                     sig
                 ]
         }
-        .view{ "against_sigs_meta_ksize_alphabet: ${it}" }
+        // .view{ "against_sigs_meta_ksize_alphabet: ${it}" }
         .map{
             meta, sig ->
                 [
@@ -40,21 +44,24 @@ workflow SEARCH {
                     sig
                 ] 
             }
-    against_sigs_ksize_alphabet.view { "against_sigs_ksize_alphabet: ${it}" }
+    // against_sigs_ksize_alphabet.view { "against_sigs_ksize_alphabet: ${it}" }
 
     query_sigs_ksize_alphabet = query_sigs
         .view{ "query_sigs: ${it}" }
         .map{
             meta, sig ->
+                // Necessary to clone and create a new local variable with "def" 
+                // because Nextflow/Groovy scoping is weird
+                def new_meta = meta.clone()
                 split = sig.baseName.tokenize('.')
-                meta.ksize = split[-2].strip('k') as Integer
-                meta.alphabet = split[-3]
+                new_meta.ksize = split[-2].strip('k') as Integer
+                new_meta.alphabet = split[-3]
                 [
-                    meta, 
+                    new_meta, 
                     sig
                 ]
         }
-        .view{ "query_sigs_meta_ksize_alphabet: ${it}" }
+        // .view{ "query_sigs_meta_ksize_alphabet: ${it}" }
         .map{
             meta, sig ->
                 [
@@ -63,7 +70,7 @@ workflow SEARCH {
                     sig
                 ] 
             }
-    query_sigs_ksize_alphabet.view { "query_sigs_ksize_alphabet: ${it}" }
+    // query_sigs_ksize_alphabet.view { "query_sigs_ksize_alphabet: ${it}" }
 
     query_against = query_sigs_ksize_alphabet.join(against_sigs_ksize_alphabet, by:0)
         .view{ "query_against: ${it}" }
