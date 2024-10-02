@@ -1,6 +1,6 @@
 process SOURMASH_MANYSKETCH {
     tag "${meta.id}_${alphabet}_k${ksize}"
-}
+
     conda "${moduleDir}/environment.yml"
     container "docker.io/olgabot/sourmash_branchwater"
 
