@@ -30,7 +30,7 @@ workflow SEARCH {
                 new_meta.ksize = split[-2].strip('k') as Integer
                 new_meta.alphabet = split[-3]
                 [
-                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet]
+                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet],
                     new_meta, 
                     sig
                 ]
@@ -48,7 +48,7 @@ workflow SEARCH {
                 new_meta.ksize = split[-2].strip('k') as Integer
                 new_meta.alphabet = split[-3]
                 [
-                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet]
+                    [ksize: new_meta.ksize, alphabet: new_meta.alphabet],
                     new_meta, 
                     sig
                 ]
