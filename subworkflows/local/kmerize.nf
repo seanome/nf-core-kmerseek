@@ -28,6 +28,9 @@ workflow KMERIZE {
 
     ch_versions = Channel.empty()
 
+    // TODO: skip SEQKIT_SPLIT2 if number of reads is greater than the input fasta size
+    // use countFasta Nextflow operator:
+    // https://www.nextflow.io/docs/latest/reference/operator.html#countfasta
     SEQKIT_SPLIT2(
         proteins,
     )

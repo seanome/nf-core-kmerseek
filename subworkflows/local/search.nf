@@ -10,7 +10,8 @@ workflow SEARCH {
 
     take:
     // TODO nf-core: edit input (take) channels
-    ch_bam // channel: [ val(meta), [ bam ] ]
+    query_sigs   // channel: [ val(meta), [ sig ] ]
+    against_sigs // channel: [ val(meta), [ sig ] ]
 
     main:
 
@@ -18,27 +19,62 @@ workflow SEARCH {
 
     // TODO nf-core: substitute modules here for the modules of your subworkflow
 
-    against_sigs_grouped = against_sigs
+    against_sigs_ksize_alphabet = against_sigs
         .view{ "against_sigs: ${it}" }
         .map{
-            meta, reads ->
-            [[id: meta.original_id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], reads] }
-        .groupTuple(by: 0)
-    against_sigs_grouped.view { "against_sigs_grouped: ${it}" }
+            meta, sig ->
+                split = sig.baseName.tokenize('.')
+                meta.ksize = split[-2].strip('k') as Integer
+                meta.alphabet = split[-3]
+                [
+                    meta, 
+                    sig
+                ]
+        }
+        .view{ "against_sigs_meta_ksize_alphabet: ${it}" }
+        .map{
+            meta, sig ->
+                [
+                    [ksize: meta.ksize, alphabet: meta.alphabet], 
+                    [id: meta.id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], 
+                    sig
+                ] 
+            }
+    against_sigs_ksize_alphabet.view { "against_sigs_ksize_alphabet: ${it}" }
 
-    query_sigs_grouped = query_sigs
+    query_sigs_ksize_alphabet = query_sigs
         .view{ "query_sigs: ${it}" }
         .map{
-            meta, reads ->
-            [[id: meta.original_id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], reads] }
-        .groupTuple(by: 0)
-    query_sigs_grouped.view { "query_sigs_grouped: ${it}" }
+            meta, sig ->
+                split = sig.baseName.tokenize('.')
+                meta.ksize = split[-2].strip('k') as Integer
+                meta.alphabet = split[-3]
+                [
+                    meta, 
+                    sig
+                ]
+        }
+        .view{ "query_sigs_meta_ksize_alphabet: ${it}" }
+        .map{
+            meta, sig ->
+                [
+                    [ksize: meta.ksize, alphabet: meta.alphabet], 
+                    [id: meta.id, single_end: meta.single_end, ksize: meta.ksize, alphabet: meta.alphabet], 
+                    sig
+                ] 
+            }
+    query_sigs_ksize_alphabet.view { "query_sigs_ksize_alphabet: ${it}" }
+
+    query_against = query_sigs_ksize_alphabet.join(against_sigs_ksize_alphabet, by:0)
+        .view{ "query_against: ${it}" }
+
+    SOURMASH_MULTISEARCH(
+        query_against
+    )
 
     emit:
     // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
+    multisearch_csvs      = SOURMASH_MULTISEARCH.out.csv           // channel: [ val(meta), [ bam ] ]
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
