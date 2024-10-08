@@ -43,6 +43,7 @@ workflow KMERSEEK {
         ch_samplesheet,
         params.alphabet,
         ch_ksizes,
+        "query",
     )
     ch_versions = ch_versions.mix(KMERIZE_QUERY.out.versions)
 
@@ -51,6 +52,7 @@ workflow KMERSEEK {
         ch_target,
         params.alphabet,
         ch_ksizes,
+        "against"
     )
     ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
 
