@@ -1,11 +1,12 @@
 process SOURMASH_MULTISEARCH {
     tag "${meta.alphabet}_k${meta.ksize}"
+    label "process_medium"
 
     conda "${moduleDir}/environment.yml"
     container "docker.io/olgabot/sourmash_branchwater_multisearch_prob_overlap"
 
     input:
-    tuple val(meta), val(query_meta), path(query_sig), val(against_meta), val(against_sig)
+    tuple val(meta), val(query_meta), path(query_sig), val(against_meta), path(against_sig)
 
     output:
     tuple val(meta), path("*.csv"), emit: csv
