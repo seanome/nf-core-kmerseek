@@ -9,6 +9,7 @@ include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { KMERIZE as KMERIZE_QUERY  } from '../subworkflows/local/kmerize.nf'
 include { KMERIZE as KMERIZE_TARGET } from '../subworkflows/local/kmerize.nf'
+include { SEARCH                 } from '../subworkflows/local/search.nf'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_kmerseek_pipeline'
@@ -42,6 +43,7 @@ workflow KMERSEEK {
         ch_samplesheet,
         params.alphabet,
         ch_ksizes,
+        "query",
     )
     ch_versions = ch_versions.mix(KMERIZE_QUERY.out.versions)
 
@@ -50,8 +52,15 @@ workflow KMERSEEK {
         ch_target,
         params.alphabet,
         ch_ksizes,
+        "against"
     )
     ch_versions = ch_versions.mix(KMERIZE_TARGET.out.versions)
+
+    SEARCH (
+        KMERIZE_QUERY.out.signatures,
+        KMERIZE_TARGET.out.signatures,
+    )
+    ch_versions = ch_versions.mix(SEARCH.out.versions)
 
     //
     // Collate and save software versions

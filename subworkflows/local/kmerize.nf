@@ -23,11 +23,15 @@ workflow KMERIZE {
     proteins           // meta, fasta: Path to input fasta file
     alphabet           // string: Alphabet of the input sequences (dna, protein, dayhoff, hp)
     ksizes             // string: k=\d+,k=\d+ k-mer sizes to use
+    query_or_against   // string: "query" or "against" to prevent filename collisions in all-by-all comparisons
 
     main:
 
     ch_versions = Channel.empty()
 
+    // TODO: skip SEQKIT_SPLIT2 if number of reads is greater than the input fasta size
+    // use countFasta Nextflow operator:
+    // https://www.nextflow.io/docs/latest/reference/operator.html#countfasta
     SEQKIT_SPLIT2(
         proteins,
     )
@@ -47,6 +51,7 @@ workflow KMERIZE {
         split_reads,
         alphabet,
         ksizes,
+        query_or_against,
     )
 
     ch_versions = ch_versions.mix(SOURMASH_MANYSKETCH.out.versions)
