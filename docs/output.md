@@ -14,6 +14,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Seqkit Split2](#seqkit-split2) - split up a protein fasta file into smaller files for better performance with Sourmash
 - [Sourmash](#sourmash) - Convert protein sequence into k-mer signatures
+  - [Sketch]
+  - [Multisearch]
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -33,15 +35,32 @@ SeqKit is a cross-platform and ultrafast toolkit for FASTA/Q file manipulation. 
 
 ### Sourmash
 
+#### Sourmash Sketch
+
 <details markdown="1">
 <summary>Output files</summary>
 
-- `sourmash/`
-  - `*.sig`: FastQC report containing quality metrics.
+- `sourmash/sigs/`
+  - `*.sig`: K-mer signature generated from protein sequence
 
 </details>
 
-[`Sourmash`](https://sourmash.readthedocs.io/) is a tool for genome analysis using k-mers. We specifically use the protein k-mer functionality to identify sequences with potentially related functions across large evolutionary distances. For further reading and documentation, see the [Sourmash Tutorials and Examples](https://sourmash.readthedocs.io/en/latest/sidebar.html)
+[`Sourmash`](https://sourmash.readthedocs.io/) is a tool for genome analysis using k-mers. We specifically use the protein k-mer functionality to identify sequences with potentially related functions across large evolutionary distances. For further reading and documentation, see the [Sourmash Tutorials and Examples](https://sourmash.readthedocs.io/en/latest/sidebar.html) Specifically, we use [`manysketch`](https://github.com/sourmash-bio/sourmash_plugin_branchwater/blob/main/doc/README.md#running-manysketch) from the [branchwater](https://github.com/sourmash-bio/sourmash_plugin_branchwater/) plugin for Sourmash to perform fast, parallelized sketch computation.
+
+The default arguments are: `"--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"`, where the alphabet (or moltype) is a protein alphabet, and the k-size (k-mer size) is an integer.
+
+
+#### Sourmash Multisearch (Branchwater Plugin)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `sourmash/multisearch/`
+  - `*.multisearch.csv`: Results from searching 
+</details>
+
+We use the [branchwater](https://github.com/sourmash-bio/sourmash_plugin_branchwater/) plugin for [`Sourmash`](https://sourmash.readthedocs.io/) to perform fast, parallelized search using Rust-optimized Python code. Specifically, we use the [`multisearch`](https://github.com/sourmash-bio/sourmash_plugin_branchwater/blob/main/doc/README.md#Running-multisearch-and-pairwise) plugin, which loads all the 'against' (aka 'target' or 'database') sketches into memory, and computes the [probability of overlap](https://github.com/sourmash-bio/sourmash_plugin_branchwater/pull/458) between the query and against sketches, useful for ranking matches that are less likely to be by chance.
+
 
 ### MultiQC
 
