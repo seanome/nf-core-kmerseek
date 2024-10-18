@@ -23,7 +23,7 @@ workflow SEARCH {
         // .view{ "against_sigs: ${it}" }
         .map{
             meta, sig ->
-                // Necessary to clone and create a new local variable with "def" 
+                // Necessary to clone and create a new local variable with "def"
                 // because Nextflow/Groovy scoping is weird
                 def new_meta = meta.clone()
                 split = sig.baseName.tokenize('.')
@@ -31,7 +31,7 @@ workflow SEARCH {
                 new_meta.alphabet = split[-3]
                 [
                     [ksize: new_meta.ksize, alphabet: new_meta.alphabet],
-                    new_meta, 
+                    new_meta,
                     sig
                 ]
         }
@@ -41,7 +41,7 @@ workflow SEARCH {
         // .view{ "query_sigs: ${it}" }
         .map{
             meta, sig ->
-                // Necessary to clone and create a new local variable with "def" 
+                // Necessary to clone and create a new local variable with "def"
                 // because Nextflow/Groovy scoping is weird
                 def new_meta = meta.clone()
                 split = sig.baseName.tokenize('.')
@@ -49,7 +49,7 @@ workflow SEARCH {
                 new_meta.alphabet = split[-3]
                 [
                     [ksize: new_meta.ksize, alphabet: new_meta.alphabet],
-                    new_meta, 
+                    new_meta,
                     sig
                 ]
         }
@@ -68,4 +68,3 @@ workflow SEARCH {
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
-
