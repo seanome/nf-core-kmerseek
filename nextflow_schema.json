@@ -103,7 +103,7 @@
             "properties": {
                 "split2_size": {
                     "type": "integer",
-                    "default": 100000,
+                    "default": 100000000,
                     "hidden": true,
                     "description": "How many fasta entries to have per split of a fasta file. Increasing is not recommended as it will drastically decrease performance, but feel free to decrease if you have smaller target database files, with fewer fasta entries"
                 }
