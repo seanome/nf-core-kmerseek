@@ -43,7 +43,7 @@ The typical command for running the pipeline is as follows:
 nextflow run nf-core/kmerseek --input ./samplesheet.csv --outdir ./results --fasta uniref50.fasta -profile docker
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles. `--fasta` is the file against which all the samples in `samplesheet.csv` are compared against.
 
 Note that the pipeline will create the following files in your working directory:
 

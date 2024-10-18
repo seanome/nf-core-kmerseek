@@ -1,13 +1,14 @@
 process SOURMASH_MANYSKETCH {
-    tag "${meta.id}_k${ksize}"
+    tag "${meta.id}_${alphabet}_k${ksize}"
 
     conda "${moduleDir}/environment.yml"
-    container "docker.io/olgabot/sourmash_branchwater"
+    container "docker.io/olgabot/sourmash_branchwater:latest"
 
     input:
     tuple val(meta), path(sequence)
     val(alphabet)
     each ksize
+    val(query_or_against)
 
     output:
     tuple val(meta), path("*.sig.zip"), emit: signatures
@@ -34,7 +35,7 @@ process SOURMASH_MANYSKETCH {
         --debug \\
         -c $task.cpus \\
         $args \\
-        --output '${prefix}.${alphabet}.k${ksize}.sig.zip' \\
+        --output '${query_or_against}.${prefix}.${alphabet}.k${ksize}.sig.zip' \\
         ${meta.id}__manysketch.csv
 
     cat <<-END_VERSIONS > versions.yml

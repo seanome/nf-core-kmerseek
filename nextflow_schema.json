@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/kmerseek/master/nextflow_schema.json",
     "title": "nf-core/kmerseek pipeline parameters",
     "description": "Search for matching protein sequences using k-mers",
@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -59,10 +62,17 @@
                     "type": "string",
                     "default": "protein",
                     "description": "Amino acid alphabet to use, must be one of \"protein\" (20-letter), \"dayhoff\" (6-letter), or \"hp\" (2-letter)",
-                    "enum": ["protein", "dayhoff", "hp"]
+                    "enum": [
+                        "protein",
+                        "dayhoff",
+                        "hp"
+                    ]
                 }
             },
-            "required": ["ksizes", "alphabet"]
+            "required": [
+                "ksizes",
+                "alphabet"
+            ]
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -103,7 +113,7 @@
             "properties": {
                 "split2_size": {
                     "type": "integer",
-                    "default": 100000,
+                    "default": 100000000,
                     "hidden": true,
                     "description": "How many fasta entries to have per split of a fasta file. Increasing is not recommended as it will drastically decrease performance, but feel free to decrease if you have smaller target database files, with fewer fasta entries"
                 }
@@ -217,7 +227,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
