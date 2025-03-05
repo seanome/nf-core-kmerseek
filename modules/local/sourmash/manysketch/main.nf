@@ -19,7 +19,7 @@ process SOURMASH_MANYSKETCH {
 
     script:
     // required defaults for the tool to run, but can be overridden
-    def args = "--singleton --param-string '$alphabet,scaled=1,k=$ksize,abund'"
+    def args = "--singleton --param-string '${alphabet},scaled=1,k=${ksize},abund'"
     def prefix = task.ext.prefix ?: "${meta.id}"
     def BRANCHWATER_VERSION = '0.9.3' // Version not available using command line
     """

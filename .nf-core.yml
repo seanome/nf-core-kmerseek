@@ -1,5 +1,19 @@
+bump_version: null
+nf_core_version: 3.0.2
+org_path: null
 repository_type: pipeline
-nf_core_version: "2.14.1"
+
+template:
+  author: Olga Botvinnik
+  description: Search for matching protein sequences using k-mers
+  force: false
+  is_nfcore: true
+  name: kmerseek
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 1.0dev
+update: null
 
 lint:
   files_unchanged:
