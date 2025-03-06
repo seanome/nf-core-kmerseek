@@ -7,7 +7,9 @@ LABEL \
 
 # Install the conda environment
 
-ADD https://api.github.com/repos/sourmash-bio/sourmash_plugin_branchwater/git/refs/heads/olgabot/multisearch-evalue version.json
+# Download the latest hash commit of sourmash branchwater 'main' branch
+ADD https://api.github.com/repos/sourmash-bio/sourmash_plugin_branchwater/git/refs/heads/main version.json
+# The following will rerun if the hash commit has changed from before
 RUN git clone --depth 1 --branch olgabot/multisearch-evalue https://github.com/sourmash-bio/sourmash_plugin_branchwater/
 RUN cd sourmash_plugin_branchwater \
     && conda env create -y -n sourmash-branchwater-multisearch-prob-overlap -f environment.yml
